@@ -6,6 +6,9 @@ export enum View {
   VERIFIED_LOGS = 'VERIFIED_LOGS',
   TOOLS = 'TOOLS',
   CONTACT = 'CONTACT',
+  BROWSER = 'BROWSER',
+  PILOT_APPS = 'PILOT_APPS',
+  MENTOR_TOOLS = 'MENTOR_TOOLS',
 }
 
 export interface ProgramLogEntry {

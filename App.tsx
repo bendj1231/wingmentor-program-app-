@@ -11,11 +11,17 @@ import {
   X,
   LogOut,
   User,
-  Plus
+  Plus,
+  Globe,
+  LayoutGrid,
+  Briefcase
 } from 'lucide-react';
 import LoadingScreen from './components/LoadingScreen';
 import Dashboard from './components/Dashboard';
 import PilotTools from './components/PilotTools';
+import WebBrowser from './components/WebBrowser';
+import PilotApps from './components/PilotApps';
+import MentorTools from './components/MentorTools';
 import { View, ProgramLogEntry } from './types';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 
@@ -383,6 +389,9 @@ const App: React.FC = () => {
       case View.VERIFIED_LOGS: return 'Verified Logs';
       case View.TOOLS: return 'Pilot Tools';
       case View.CONTACT: return 'Contact Team';
+      case View.BROWSER: return 'Web Browser';
+      case View.PILOT_APPS: return 'Pilot Apps';
+      case View.MENTOR_TOOLS: return 'Mentor Productivity';
       default: return 'WingMentor';
     }
   };
@@ -480,12 +489,20 @@ const App: React.FC = () => {
               <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Resources</p>
             </div>
             <NavItem view={View.HANDBOOK} icon={BookOpen} label="Operating Handbook" />
+            <NavItem view={View.PILOT_APPS} icon={LayoutGrid} label="Pilot Apps" />
             <NavItem view={View.TOOLS} icon={Wrench} label="Pilot Tools" />
+            <NavItem view={View.BROWSER} icon={Globe} label="Web Browser" />
             <div className="pt-4 pb-2">
               <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Logbook</p>
             </div>
             <NavItem view={View.LOGS} icon={FileText} label="Program Logs" />
             <NavItem view={View.VERIFIED_LOGS} icon={CheckCircle} label="Verified Logs" />
+            
+            <div className="pt-4 pb-2">
+              <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Mentorship</p>
+            </div>
+            <NavItem view={View.MENTOR_TOOLS} icon={Briefcase} label="Mentor Tools" />
+            
             <div className="pt-4 pb-2">
               <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Support</p>
             </div>
@@ -511,13 +528,21 @@ const App: React.FC = () => {
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto bg-slate-50 relative">
           <div className="max-w-7xl mx-auto p-4 md:p-8 min-h-[calc(100vh-8rem)]">
-             {activeView === View.DASHBOARD && <Dashboard />}
+             {activeView === View.DASHBOARD && (
+               <Dashboard 
+                 logs={logs} 
+                 onViewLogs={() => setActiveView(View.LOGS)} 
+               />
+             )}
              {activeView === View.PROGRESS && <ProgramProgress />}
              {activeView === View.HANDBOOK && <Handbook />}
              {activeView === View.LOGS && <LogsTable logs={logs} verified={false} onAddClick={() => setIsLogModalOpen(true)} />}
              {activeView === View.VERIFIED_LOGS && <LogsTable logs={logs} verified={true} />}
              {activeView === View.TOOLS && <PilotTools />}
              {activeView === View.CONTACT && <ContactForm />}
+             {activeView === View.BROWSER && <WebBrowser />}
+             {activeView === View.PILOT_APPS && <PilotApps />}
+             {activeView === View.MENTOR_TOOLS && <MentorTools />}
           </div>
           
           {/* Footer */}
