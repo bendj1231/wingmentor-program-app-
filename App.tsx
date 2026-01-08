@@ -374,6 +374,19 @@ const App: React.FC = () => {
     setIsLogModalOpen(false);
   };
 
+  const getViewLabel = (view: View) => {
+    switch (view) {
+      case View.DASHBOARD: return 'Dashboard';
+      case View.PROGRESS: return 'Program Progress';
+      case View.HANDBOOK: return 'Operating Handbook';
+      case View.LOGS: return 'Program Logs';
+      case View.VERIFIED_LOGS: return 'Verified Logs';
+      case View.TOOLS: return 'Pilot Tools';
+      case View.CONTACT: return 'Contact Team';
+      default: return 'WingMentor';
+    }
+  };
+
   const NavItem = ({ view, icon: Icon, label }: { view: View; icon: any; label: string }) => (
     <button
       onClick={() => {
@@ -405,24 +418,39 @@ const App: React.FC = () => {
 
       {/* Top Bar */}
       <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-30 px-4 md:px-6 flex items-center justify-between shadow-sm">
-        {/* Left Section (Menu Button on Mobile) */}
-        <div className="flex items-center md:hidden z-20">
+        
+        {/* Left Section: Mobile Menu Button & Page Title */}
+        <div className="flex items-center z-20 gap-3 md:gap-0">
           <button 
-            className="p-2 -ml-2 text-slate-500 hover:bg-slate-100 rounded-lg"
+            className="md:hidden p-2 -ml-2 text-slate-500 hover:bg-slate-100 rounded-lg"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
+          
+          {/* Mobile Page Title - Next to side menu bar */}
+          <span className="md:hidden font-semibold text-slate-800 text-lg truncate max-w-[150px]">
+            {getViewLabel(activeView)}
+          </span>
+
+          {/* Desktop Logo & Title Area */}
+          <div className="hidden md:flex items-center space-x-4">
+             <div className="flex items-center space-x-2">
+                <img src={LOGO_URL} alt="WingMentor" className="h-8 object-contain" />
+                <span className="font-bold text-slate-800 text-xl tracking-tight">WingMentor</span>
+             </div>
+             <div className="h-6 w-px bg-slate-300"></div>
+             <span className="text-slate-600 font-medium text-lg">{getViewLabel(activeView)}</span>
+          </div>
         </div>
         
-        {/* Center Section on Mobile (Logo) / Left on Desktop */}
-        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:static md:transform-none md:flex md:items-center md:space-x-3">
+        {/* Center Section on Mobile (Logo) */}
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:hidden z-10">
           <img 
             src={LOGO_URL} 
             alt="WingMentor" 
-            className="h-12 md:h-10 object-contain" 
+            className="h-10 object-contain" 
           />
-          <span className="hidden md:block font-bold text-slate-800 text-lg tracking-tight">WingMentor</span>
         </div>
         
         {/* Right Section (User Profile on Desktop) */}
