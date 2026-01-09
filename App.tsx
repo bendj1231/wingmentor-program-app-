@@ -18,6 +18,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import LoadingScreen from './components/LoadingScreen';
+import LoginScreen from './components/LoginScreen';
 import Dashboard from './components/Dashboard';
 import PilotTools from './components/PilotTools';
 import PilotApps from './components/PilotApps';
@@ -76,39 +77,76 @@ const ContactForm = () => (
   </div>
 );
 
-const ProgramProgress = () => {
-  const data = [
-    { name: 'Week 1', hours: 2, target: 3 },
-    { name: 'Week 2', hours: 5, target: 6 },
-    { name: 'Week 3', hours: 8, target: 9 },
-    { name: 'Week 4', hours: 14, target: 12 },
-    { name: 'Week 5', hours: 18, target: 15 },
-    { name: 'Week 6', hours: 25, target: 20 },
-  ];
+const ProgramProgress = ({ connected, onConnect }: { connected: boolean; onConnect: () => void }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleConnect = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (username && password) onConnect();
+  };
+
+  if (!connected) {
+    return (
+      <div className="space-y-6 animate-fadeIn">
+        <h2 className="text-2xl font-bold text-slate-800">Program Progress Analytics</h2>
+        <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-center max-w-2xl mx-auto py-16">
+           <div className="w-20 h-20 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+             <LineChart size={40} />
+           </div>
+           <h3 className="text-xl font-bold text-slate-800 mb-2">Connect Analytics Account</h3>
+           <p className="text-slate-500 mb-8 max-w-md mx-auto">
+             Please sign in to your JotForm account to securely load your personalized program analytics, flight hours, and progress reports.
+           </p>
+           
+           <form onSubmit={handleConnect} className="max-w-sm mx-auto space-y-4">
+             <input 
+               type="text" 
+               placeholder="JotForm Username"
+               value={username}
+               onChange={(e) => setUsername(e.target.value)}
+               className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+             />
+             <input 
+               type="password" 
+               placeholder="Password"
+               value={password}
+               onChange={(e) => setPassword(e.target.value)}
+               className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+             />
+             <button 
+               type="submit"
+               className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-colors shadow-md"
+             >
+               Sign In & Load Analytics
+             </button>
+           </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <h2 className="text-2xl font-bold text-slate-800">Program Progress</h2>
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h3 className="font-semibold text-slate-700 mb-6">Flight Hours vs Target</h3>
-        <div className="h-96">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="name" axisLine={false} tickLine={false} />
-              <YAxis axisLine={false} tickLine={false} />
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <RechartsTooltip />
-              <Area type="monotone" dataKey="hours" stroke="#0ea5e9" fillOpacity={1} fill="url(#colorHours)" strokeWidth={2} />
-              <Area type="monotone" dataKey="target" stroke="#94a3b8" fill="transparent" strokeDasharray="5 5" strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-slate-800">Program Progress Analytics</h2>
+        <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 flex items-center gap-2">
+          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+          Live Analytics Synced
+        </span>
+      </div>
+      
+      {/* Embedded Analytics Container */}
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-[800px] relative">
+         <iframe 
+           src="https://www.jotform.com/report/240087115842049" 
+           className="w-full h-full border-0"
+           title="Program Analytics"
+         ></iframe>
+         {/* Fallback/Overlay in case it doesn't load nicely or is generic */}
+         <div className="absolute inset-0 bg-slate-50 flex items-center justify-center -z-10">
+            <p className="text-slate-400 animate-pulse">Loading Secured Analytics Dashboard...</p>
+         </div>
       </div>
     </div>
   );
@@ -241,7 +279,9 @@ const Handbook = () => (
 // --- Main App Component ---
 
 const App: React.FC = () => {
-  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [jotFormConnected, setJotFormConnected] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [activeView, setActiveView] = useState<View>(View.DASHBOARD);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
@@ -271,13 +311,16 @@ const App: React.FC = () => {
 
   const LOGO_URL = "https://lh3.googleusercontent.com/d/1KgVuIuCv8mKxTcJ4rClCUCdaQ3fxm0x6";
 
-  useEffect(() => {
-    // Simulate initial asset loading
-    const timer = setTimeout(() => {
+  const handleLogin = (jfConnected: boolean) => {
+    setJotFormConnected(jfConnected);
+    setIsAuthenticated(true);
+    setLoading(true);
+    
+    // Simulate loading delay after login
+    setTimeout(() => {
       setLoading(false);
     }, 2500);
-    return () => clearTimeout(timer);
-  }, []);
+  };
 
   const getViewLabel = (view: View) => {
     switch (view) {
@@ -312,6 +355,11 @@ const App: React.FC = () => {
       <span className="font-medium text-sm">{label}</span>
     </button>
   );
+
+  // View Routing
+  if (!isAuthenticated) {
+    return <LoginScreen onLogin={handleLogin} logoUrl={LOGO_URL} />;
+  }
 
   if (loading) {
     return <LoadingScreen logoUrl={LOGO_URL} />;
@@ -428,7 +476,10 @@ const App: React.FC = () => {
           </div>
           
           <div className="p-4 border-t border-slate-200">
-            <button className="flex items-center space-x-3 text-slate-500 hover:text-red-600 transition-colors w-full px-4 py-2">
+            <button 
+              onClick={() => setIsAuthenticated(false)}
+              className="flex items-center space-x-3 text-slate-500 hover:text-red-600 transition-colors w-full px-4 py-2"
+            >
               <LogOut size={18} />
               <span className="text-sm font-medium">Sign Out</span>
             </button>
@@ -451,7 +502,12 @@ const App: React.FC = () => {
                  onNavigate={(view) => setActiveView(view)} 
                />
              )}
-             {activeView === View.PROGRESS && <ProgramProgress />}
+             {activeView === View.PROGRESS && (
+               <ProgramProgress 
+                 connected={jotFormConnected} 
+                 onConnect={() => setJotFormConnected(true)} 
+               />
+             )}
              {activeView === View.HANDBOOK && <Handbook />}
              {activeView === View.LOGS && <ProgramLogsEmbed />}
              {activeView === View.VERIFIED_LOGS && <LogsTable logs={logs} verified={true} />}
