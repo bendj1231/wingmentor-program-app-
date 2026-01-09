@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RotateCw, ExternalLink, ArrowLeft, ArrowRight, ShieldAlert, Globe } from 'lucide-react';
 
 const WebBrowser: React.FC = () => {
-  const DEFAULT_URL = 'https://t.me/+qzRaI1K_-Sc1MDM1';
+  const DEFAULT_URL = 'https://wingmentorapp.vercel.app/';
   const [url, setUrl] = useState(DEFAULT_URL);
   const [currentSrc, setCurrentSrc] = useState(DEFAULT_URL);
 
@@ -28,7 +28,7 @@ const WebBrowser: React.FC = () => {
         
         <form onSubmit={handleNavigate} className="flex-1 relative">
            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-             {url.includes('t.me') ? <Globe size={14} className="text-sky-500" /> : <ShieldAlert size={14} className="text-slate-400" />}
+             {url.includes('wingmentor') ? <Globe size={14} className="text-sky-500" /> : <ShieldAlert size={14} className="text-slate-400" />}
            </div>
            <input 
              type="text" 

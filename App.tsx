@@ -14,7 +14,9 @@ import {
   Plus,
   Globe,
   LayoutGrid,
-  Briefcase
+  Briefcase,
+  HelpCircle,
+  ExternalLink
 } from 'lucide-react';
 import LoadingScreen from './components/LoadingScreen';
 import Dashboard from './components/Dashboard';
@@ -22,6 +24,7 @@ import PilotTools from './components/PilotTools';
 import WebBrowser from './components/WebBrowser';
 import PilotApps from './components/PilotApps';
 import MentorTools from './components/MentorTools';
+import WelcomeGuide from './components/WelcomeGuide';
 import { View, ProgramLogEntry } from './types';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 
@@ -392,6 +395,7 @@ const App: React.FC = () => {
       case View.BROWSER: return 'Web Browser';
       case View.PILOT_APPS: return 'Pilot Apps';
       case View.MENTOR_TOOLS: return 'Mentor Productivity';
+      case View.WELCOME_GUIDE: return 'User Guide';
       default: return 'WingMentor';
     }
   };
@@ -426,7 +430,7 @@ const App: React.FC = () => {
       />
 
       {/* Top Bar */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-30 px-4 md:px-6 flex items-center justify-between shadow-sm">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-50 px-4 md:px-6 flex items-center justify-between shadow-sm">
         
         {/* Left Section: Mobile Menu Button & Page Title */}
         <div className="flex items-center z-20 gap-3 md:gap-0">
@@ -479,7 +483,7 @@ const App: React.FC = () => {
       <div className="flex pt-16 h-screen overflow-hidden">
         {/* Sidebar */}
         <aside className={`
-          fixed md:static inset-y-0 left-0 z-20 w-64 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out flex flex-col pt-16 md:pt-0
+          fixed md:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out flex flex-col pt-16 md:pt-0
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
         `}>
           <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
@@ -506,7 +510,20 @@ const App: React.FC = () => {
             <div className="pt-4 pb-2">
               <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Support</p>
             </div>
+            <NavItem view={View.WELCOME_GUIDE} icon={HelpCircle} label="User Guide" />
             <NavItem view={View.CONTACT} icon={Mail} label="Contact Team" />
+            
+            <div className="pt-2">
+              <a 
+                href="https://wingmentorapp.vercel.app/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+              >
+                <ExternalLink size={20} />
+                <span className="font-medium text-sm">Official Website</span>
+              </a>
+            </div>
           </div>
           
           <div className="p-4 border-t border-slate-200">
@@ -520,7 +537,7 @@ const App: React.FC = () => {
         {/* Overlay for mobile sidebar */}
         {mobileMenuOpen && (
           <div 
-            className="fixed inset-0 bg-black/20 z-10 md:hidden"
+            className="fixed inset-0 bg-black/20 z-30 md:hidden"
             onClick={() => setMobileMenuOpen(false)}
           ></div>
         )}
@@ -543,6 +560,7 @@ const App: React.FC = () => {
              {activeView === View.BROWSER && <WebBrowser />}
              {activeView === View.PILOT_APPS && <PilotApps />}
              {activeView === View.MENTOR_TOOLS && <MentorTools />}
+             {activeView === View.WELCOME_GUIDE && <WelcomeGuide onNavigate={setActiveView} />}
           </div>
           
           {/* Footer */}

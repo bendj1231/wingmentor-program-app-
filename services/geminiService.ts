@@ -1,14 +1,11 @@
 import { GoogleGenAI } from "@google/genai";
 
-const apiKey = process.env.API_KEY || ''; // Fallback for dev, usually injected
-
 export const askWingman = async (prompt: string, history: string[] = []): Promise<string> => {
-  if (!apiKey) {
-    return "API Key not configured. Please check your settings.";
-  }
-
+  // Initialize the Gemini client using the API key from the environment variables directly.
+  // As per guidelines, we assume process.env.API_KEY is pre-configured and valid.
+  
   try {
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
     // Construct a context-aware prompt
     const contextPrompt = `
