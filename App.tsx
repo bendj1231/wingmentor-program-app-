@@ -53,38 +53,25 @@ const ContactForm = () => (
       </div>
     </div>
 
-    {/* Message Form */}
-    <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 opacity-90">
-      <h3 className="text-lg font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">Or send us a message below</h3>
-      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">First Name</label>
-            <input type="text" className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Last Name</label>
-            <input type="text" className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Subject</label>
-          <select className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
-            <option>General Inquiry</option>
-            <option>Technical Support</option>
-            <option>Program Billing</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Message</label>
-          <textarea rows={4} className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"></textarea>
-        </div>
-        <div className="pt-2">
-          <button className="bg-slate-800 text-white px-6 py-2.5 rounded-lg hover:bg-slate-900 transition-colors font-medium w-full md:w-auto shadow-md">
-            Send Message
-          </button>
-        </div>
-      </form>
+    {/* Telegram Contact Section */}
+    <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-center animate-fadeIn">
+      <div className="w-16 h-16 bg-[#0088cc]/10 text-[#0088cc] rounded-full flex items-center justify-center mx-auto mb-6">
+        <ExternalLink size={32} />
+      </div>
+      <h3 className="text-2xl font-bold text-slate-800 mb-3">Instant Support</h3>
+      <p className="text-slate-600 mb-8 text-lg">
+        Contact our wingmentor team now for immediate assistance.
+      </p>
+      
+      <a 
+        href="https://t.me/+qzRaI1K_-Sc1MDM1" 
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-3 bg-[#0088cc] hover:bg-[#0077b5] text-white px-8 py-4 rounded-lg font-bold text-lg transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
+      >
+        <ExternalLink size={24} />
+        Join Telegram Channel
+      </a>
     </div>
   </div>
 );
@@ -461,8 +448,7 @@ const App: React.FC = () => {
           <div className="max-w-7xl mx-auto p-4 md:p-8 min-h-[calc(100vh-8rem)]">
              {activeView === View.DASHBOARD && (
                <Dashboard 
-                 logs={logs} 
-                 onViewLogs={() => setActiveView(View.LOGS)} 
+                 onNavigate={(view) => setActiveView(view)} 
                />
              )}
              {activeView === View.PROGRESS && <ProgramProgress />}

@@ -1,113 +1,110 @@
-import React, { useMemo } from 'react';
-import { Clock, AlertTriangle, Calendar, Award, User } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { ProgramLogEntry } from '../types';
+import React from 'react';
+import { Bell, ArrowRight, Database } from 'lucide-react';
+import { View } from '../types';
 
 interface DashboardProps {
-  logs: ProgramLogEntry[];
-  onViewLogs: () => void;
+  onNavigate: (view: View) => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ logs, onViewLogs }) => {
-  // Calculate stats based on actual logs
-  const totalHours = useMemo(() => {
-    return logs.reduce((acc, log) => acc + (parseFloat(log.duration) || 0), 0);
-  }, [logs]);
-
-  const pendingCount = logs.filter(l => l.status === 'Pending').length;
-  
-  // Calculate completion percentage based on a hypothetical target (e.g., 40 hours for PPL)
-  const completionPercentage = Math.min(100, Math.round((totalHours / 40) * 100));
-
-  // Mock data for the chart (visual representation)
-  const chartData = [
-    { name: 'Mon', hours: 1.5 },
-    { name: 'Tue', hours: 0 },
-    { name: 'Wed', hours: 2.1 },
-    { name: 'Thu', hours: 0.8 },
-    { name: 'Fri', hours: 0 },
-    { name: 'Sat', hours: 3.0 },
-    { name: 'Sun', hours: 0 },
+const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+  const newsItems = [
+    {
+      id: 1,
+      title: "New A320 Simulator Modules Added",
+      date: "2 hours ago",
+      category: "Curriculum Update",
+      summary: "We've updated the simulator training syllabus to include new failure scenarios for the A320 electrical system."
+    },
+    {
+      id: 2,
+      title: "WingMentor Community Webinar",
+      date: "1 day ago",
+      category: "Event",
+      summary: "Join us this Friday for a deep dive into advanced meteorology with Captain Stevenson."
+    },
+    {
+      id: 3,
+      title: "Maintenance Notice: Server Upgrades",
+      date: "2 days ago",
+      category: "System",
+      summary: "Brief downtime expected on Sunday 0200Z for database improvements."
+    }
   ];
 
   return (
-    <div className="space-y-6 animate-fadeIn">
-      <h2 className="text-2xl font-bold text-slate-800">Pilot Dashboard</h2>
-      
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-sky-50 rounded-lg text-sky-600"><Clock size={20} /></div>
-            <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">Active</span>
-          </div>
-          <h3 className="text-2xl font-bold text-slate-800">{totalHours.toFixed(1)}</h3>
-          <p className="text-slate-500 text-sm">Total Program Hours</p>
+    <div className="space-y-8 animate-fadeIn">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-800">Mission Control</h1>
+          <p className="text-slate-500">Welcome back, Captain Richardson.</p>
         </div>
-
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-orange-50 rounded-lg text-orange-600"><AlertTriangle size={20} /></div>
-            {pendingCount > 0 && (
-              <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-full">Action Req</span>
-            )}
-          </div>
-          <h3 className="text-2xl font-bold text-slate-800">{pendingCount}</h3>
-          <p className="text-slate-500 text-sm">Pending Verifications</p>
-        </div>
-
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-purple-50 rounded-lg text-purple-600"><Calendar size={20} /></div>
-          </div>
-          <h3 className="text-2xl font-bold text-slate-800">12 Oct</h3>
-          <p className="text-slate-500 text-sm">Next Scheduled Checkride</p>
-        </div>
-
-         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600"><Award size={20} /></div>
-          </div>
-          <h3 className="text-2xl font-bold text-slate-800">{completionPercentage}%</h3>
-          <p className="text-slate-500 text-sm">Program Completion</p>
+        <div className="text-sm text-slate-400 hidden md:block">
+           {new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </div>
       </div>
 
-      {/* Recent Activity & Chart */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h3 className="font-bold text-slate-800 mb-6">Weekly Program Hours</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
-                <Tooltip cursor={{fill: '#f1f5f9'}} contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
-                <Bar dataKey="hours" fill="#0ea5e9" radius={[4, 4, 0, 0]} barSize={40} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+      {/* Blackbox Promo Section */}
+      <div className="relative rounded-2xl overflow-hidden bg-slate-900 text-white shadow-xl min-h-[350px] flex items-center group cursor-pointer" onClick={() => onNavigate(View.PILOT_APPS)}>
+         {/* Background Image with Overlay */}
+         <div className="absolute inset-0 z-0">
+           <img 
+             src="https://images.unsplash.com/photo-1559067515-bf7d799b6d4d?auto=format&fit=crop&q=80&w=2000" 
+             alt="Cockpit Blackbox" 
+             className="w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-700"
+           />
+           <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
+         </div>
 
-        <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h3 className="font-bold text-slate-800 mb-4">Recent Program Logs</h3>
-          <div className="space-y-4">
-            {logs.slice(0, 3).map((log) => (
-              <div key={log.id} className="flex items-center space-x-3 p-3 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-slate-100">
-                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-xs">
-                  <User size={20} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-slate-800 truncate" title={log.description}>{log.description}</p>
-                  <p className="text-xs text-slate-500 truncate">{log.personName} • {log.date}</p>
-                </div>
-                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${log.status === 'Verified' ? 'bg-green-500' : 'bg-orange-400'}`}></div>
+         <div className="relative z-10 p-8 md:p-12 max-w-3xl">
+           <div className="flex items-center space-x-2 text-emerald-400 mb-4 font-mono">
+             <Database size={20} />
+             <span className="text-sm tracking-widest uppercase font-bold">Blackbox App</span>
+           </div>
+           <h2 className="text-3xl md:text-5xl font-bold mb-6">Knowledge Database</h2>
+           <p className="text-slate-300 text-lg mb-8 leading-relaxed max-w-xl">
+             Access the comprehensive aviation knowledge base. Analyze incident reports, review safety data, and enhance your decision-making skills through our secure pilot apps portal.
+           </p>
+           <button 
+             onClick={(e) => {
+               e.stopPropagation();
+               onNavigate(View.PILOT_APPS);
+             }}
+             className="flex items-center space-x-3 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg hover:shadow-emerald-500/25 transform hover:-translate-y-1"
+           >
+             <span>Launch Blackbox</span>
+             <ArrowRight size={20} />
+           </button>
+         </div>
+      </div>
+
+      {/* News Feed Section */}
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+            <Bell size={24} className="text-sky-600" />
+            Program News
+          </h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {newsItems.map((item) => (
+            <div key={item.id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow flex flex-col h-full group">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-bold text-sky-600 bg-sky-50 px-3 py-1 rounded-full uppercase tracking-wide">
+                  {item.category}
+                </span>
+                <span className="text-xs text-slate-400">{item.date}</span>
               </div>
-            ))}
-             {logs.length === 0 && <p className="text-sm text-slate-400 italic">No logs recorded yet.</p>}
-             <button onClick={onViewLogs} className="w-full mt-2 text-sm text-sky-600 hover:text-sky-700 font-medium py-2">View All Logs</button>
-          </div>
+              <h3 className="text-lg font-bold text-slate-800 mb-3 group-hover:text-sky-600 transition-colors line-clamp-2">{item.title}</h3>
+              <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-1">
+                {item.summary}
+              </p>
+              <button className="text-sky-600 text-sm font-semibold hover:text-sky-700 flex items-center gap-1 mt-auto">
+                Read Updates <ArrowRight size={16} />
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>
