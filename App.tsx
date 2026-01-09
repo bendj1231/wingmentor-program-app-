@@ -284,6 +284,7 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeView, setActiveView] = useState<View>(View.DASHBOARD);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState({ name: '', role: 'Mentee' });
   
   // Initial Mock Data matching new structure
   const [logs, setLogs] = useState<ProgramLogEntry[]>([
@@ -311,8 +312,16 @@ const App: React.FC = () => {
 
   const LOGO_URL = "https://lh3.googleusercontent.com/d/1KgVuIuCv8mKxTcJ4rClCUCdaQ3fxm0x6";
 
-  const handleLogin = (jfConnected: boolean) => {
+  const handleLogin = (username: string, jfConnected: boolean) => {
     setJotFormConnected(jfConnected);
+    
+    // Determine role based on username configuration (simple heuristic for demo)
+    const lowerUser = username.toLowerCase();
+    const role = (lowerUser.includes('mentor') || lowerUser.includes('capt') || lowerUser.includes('instructor')) 
+      ? 'Mentor' 
+      : 'Mentee';
+      
+    setCurrentUser({ name: username, role });
     setIsAuthenticated(true);
     setLoading(true);
     
@@ -409,8 +418,8 @@ const App: React.FC = () => {
         <div className="flex items-center space-x-4 z-20">
           <div className="hidden md:flex items-center space-x-2 text-right">
              <div className="text-xs text-slate-500">
-               <p>Cadet Pilot</p>
-               <p className="font-bold text-slate-800">Alex Richardson</p>
+               <p>{currentUser.role}</p>
+               <p className="font-bold text-slate-800">{currentUser.name}</p>
              </div>
              <div className="w-9 h-9 bg-sky-100 rounded-full flex items-center justify-center text-sky-700 border border-sky-200">
                <User size={18} />

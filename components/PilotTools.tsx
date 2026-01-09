@@ -14,7 +14,7 @@ const PilotTools: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Mobile Option */}
         <a 
-          href="https://wingmentorapp.vercel.app/" 
+          href="https://wingmentormobile.vercel.app" 
           target="_blank"
           rel="noopener noreferrer"
           className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-400 hover:shadow-md transition-all group flex flex-col items-center text-center space-y-6 h-full"
@@ -38,7 +38,7 @@ const PilotTools: React.FC = () => {
 
         {/* Desktop Option */}
         <a 
-          href="https://wingmentorapp.vercel.app/" 
+          href="https://wm-1000.vercel.app/" 
           target="_blank"
           rel="noopener noreferrer"
           className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:border-sky-400 hover:shadow-md transition-all group flex flex-col items-center text-center space-y-6 h-full"

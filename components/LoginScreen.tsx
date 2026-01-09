@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User, Lock, ArrowRight, BarChart3 } from 'lucide-react';
 
 interface LoginScreenProps {
-  onLogin: (jotFormConnected: boolean) => void;
+  onLogin: (username: string, jotFormConnected: boolean) => void;
   logoUrl: string;
 }
 
@@ -15,8 +15,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, logoUrl }) => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, we would validate credentials here.
-    // We determine if JotForm is connected based on if the user entered credentials for it.
-    onLogin(!!jfUser && !!jfPass);
+    // We pass the username back to the App component to display in the header.
+    if (wmUser) {
+      onLogin(wmUser, !!jfUser && !!jfPass);
+    }
   };
 
   return (
