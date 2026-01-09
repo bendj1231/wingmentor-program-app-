@@ -10,10 +10,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   const newsItems = [
     {
       id: 1,
-      title: "New A320 Simulator Modules Added",
+      title: "New IFR Simulator Added",
       date: "2 hours ago",
-      category: "Curriculum Update",
-      summary: "We've updated the simulator training syllabus to include new failure scenarios for the A320 electrical system."
+      category: "Desktop App Update",
+      summary: "Experience the new IFR training module on the WingMentor Desktop App. Learn the foundations of IFR maneuvers and master chart interpretation."
     },
     {
       id: 2,
