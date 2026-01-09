@@ -1,93 +1,64 @@
 import React from 'react';
-import { Plane, CloudLightning, Map, Book, Shield, Radio, ExternalLink, Smartphone } from 'lucide-react';
+import { Smartphone, Monitor, ExternalLink } from 'lucide-react';
 
 const PilotApps: React.FC = () => {
-  const apps = [
-    {
-      title: "FlightPlan Pro",
-      description: "Advanced flight planning with performance calculations and fuel management.",
-      icon: Map,
-      color: "bg-blue-50 text-blue-600",
-      status: "Installed"
-    },
-    {
-      title: "SkyRadar Weather",
-      description: "Real-time radar, METARs, TAFs, and satellite imagery overlay.",
-      icon: CloudLightning,
-      color: "bg-indigo-50 text-indigo-600",
-      status: "Launch"
-    },
-    {
-      title: "WingMentor Logbook",
-      description: "Digital pilot logbook with EASA/FAA compliance and export features.",
-      icon: Book,
-      color: "bg-sky-50 text-sky-600",
-      status: "Launch"
-    },
-    {
-      title: "Safety Ops",
-      description: "Safety management system (SMS) reporting and risk assessment tools.",
-      icon: Shield,
-      color: "bg-emerald-50 text-emerald-600",
-      status: "Launch"
-    },
-    {
-      title: "Radio Master",
-      description: "ATC communication simulator with voice recognition practice.",
-      icon: Radio,
-      color: "bg-orange-50 text-orange-600",
-      status: "Update Available"
-    },
-    {
-      title: "Checklist Mobile",
-      description: "Interactive checklists for Cessna, Piper, and Diamond aircraft.",
-      icon: Smartphone,
-      color: "bg-slate-50 text-slate-600",
-      status: "Launch"
-    }
-  ];
-
   return (
-    <div className="space-y-6 animate-fadeIn">
-      <div className="flex justify-between items-end">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800">WingMentor Pilot Apps</h2>
-          <p className="text-slate-500 mt-1">Access your suite of integrated flight applications.</p>
-        </div>
-        <button className="text-sm text-sky-600 font-medium hover:underline">Manage Subscriptions</button>
+    <div className="space-y-8 animate-fadeIn max-w-4xl mx-auto py-12">
+      <div className="text-center space-y-4 mb-12">
+        <h2 className="text-3xl font-bold text-slate-800">WingMentor Apps</h2>
+        <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+          Choose your platform to access flight tools, logs, and resources.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {apps.map((app, index) => (
-          <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:border-sky-300 transition-all group cursor-pointer flex flex-col h-full">
-            <div className="flex items-start justify-between mb-4">
-              <div className={`p-3 rounded-xl ${app.color}`}>
-                <app.icon size={24} />
-              </div>
-              <ExternalLink size={18} className="text-slate-300 group-hover:text-sky-500 transition-colors" />
-            </div>
-            
-            <h3 className="text-lg font-bold text-slate-800 mb-2">{app.title}</h3>
-            <p className="text-slate-500 text-sm mb-6 flex-1">{app.description}</p>
-            
-            <button className={`w-full py-2 rounded-lg text-sm font-semibold transition-colors ${
-              app.status === 'Update Available' 
-                ? 'bg-orange-50 text-orange-600 hover:bg-orange-100' 
-                : 'bg-slate-50 text-slate-700 hover:bg-slate-100 group-hover:bg-sky-50 group-hover:text-sky-700'
-            }`}>
-              {app.status}
-            </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Mobile Option */}
+        <a 
+          href="https://wingmentorapp.vercel.app/" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-400 hover:shadow-md transition-all group flex flex-col items-center text-center space-y-6 h-full"
+        >
+          <div className="w-32 h-32 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform duration-300">
+            <Smartphone size={64} />
           </div>
-        ))}
-        
-        {/* Coming Soon Card */}
-        <div className="bg-slate-50 border-2 border-dashed border-slate-200 p-6 rounded-xl flex flex-col items-center justify-center text-center opacity-75">
-           <div className="p-3 bg-slate-100 rounded-full text-slate-400 mb-3">
-             <Plane size={24} />
-           </div>
-           <h3 className="font-semibold text-slate-600">More Coming Soon</h3>
-           <p className="text-xs text-slate-400 mt-1">We are constantly adding new tools to the ecosystem.</p>
-        </div>
+          <div className="flex-1">
+            <h3 className="text-2xl font-bold text-slate-800 mb-3">Mobile App</h3>
+            <p className="text-slate-500 leading-relaxed">
+              Access the mobile-optimized companion for on-the-go checklists, quick logging, and weather updates directly in your browser.
+            </p>
+          </div>
+          <div className="pt-4 w-full">
+            <span className="flex items-center justify-center space-x-2 w-full text-emerald-600 font-bold bg-emerald-50 px-6 py-4 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+              <span>Launch Mobile App</span>
+              <ExternalLink size={20} />
+            </span>
+          </div>
+        </a>
+
+        {/* Desktop Option */}
+        <a 
+          href="https://wingmentorapp.vercel.app/" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:border-sky-400 hover:shadow-md transition-all group flex flex-col items-center text-center space-y-6 h-full"
+        >
+          <div className="w-32 h-32 bg-sky-50 rounded-full flex items-center justify-center text-sky-600 group-hover:scale-110 transition-transform duration-300">
+            <Monitor size={64} />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-2xl font-bold text-slate-800 mb-3">Desktop Version</h3>
+            <p className="text-slate-500 leading-relaxed">
+              Access the full-featured web portal for comprehensive flight planning, logbook management, and mentorship tools.
+            </p>
+          </div>
+          <div className="pt-4 w-full">
+            <span className="flex items-center justify-center space-x-2 w-full text-sky-600 font-bold bg-sky-50 px-6 py-4 rounded-xl group-hover:bg-sky-600 group-hover:text-white transition-colors">
+              <span>Launch Desktop App</span>
+              <ExternalLink size={20} />
+            </span>
+          </div>
+        </a>
       </div>
     </div>
   );

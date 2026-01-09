@@ -11,7 +11,6 @@ import {
   X,
   LogOut,
   User,
-  Plus,
   Globe,
   LayoutGrid,
   Briefcase,
@@ -21,7 +20,6 @@ import {
 import LoadingScreen from './components/LoadingScreen';
 import Dashboard from './components/Dashboard';
 import PilotTools from './components/PilotTools';
-import WebBrowser from './components/WebBrowser';
 import PilotApps from './components/PilotApps';
 import MentorTools from './components/MentorTools';
 import WelcomeGuide from './components/WelcomeGuide';
@@ -31,33 +29,63 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsToolti
 // --- Components ---
 
 const ContactForm = () => (
-  <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-slate-200 animate-fadeIn">
-    <h2 className="text-2xl font-bold text-slate-800 mb-6">Contact WingMentor</h2>
-    <form className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">First Name</label>
-          <input type="text" className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+  <div className="max-w-3xl mx-auto space-y-6 animate-fadeIn">
+    {/* Email Contact Section */}
+    <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-center">
+      <div className="w-16 h-16 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto mb-6">
+        <Mail size={32} />
+      </div>
+      <h2 className="text-2xl font-bold text-slate-800 mb-3">Get in Touch</h2>
+      <p className="text-slate-600 mb-6 max-w-lg mx-auto">
+        Have questions about the WingMentor program, need verification support, or technical assistance? 
+        Email our team directly for the fastest response.
+      </p>
+      
+      <div className="inline-block relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-sky-400 to-blue-500 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
+        <a 
+          href="mailto:wingmentorprogram@gmail.com" 
+          className="relative bg-white border border-slate-200 text-sky-600 hover:text-sky-700 px-8 py-4 rounded-lg font-bold text-lg md:text-xl flex items-center gap-3 transition-all shadow-sm hover:shadow-md"
+        >
+          <Mail size={24} />
+          wingmentorprogram@gmail.com
+        </a>
+      </div>
+    </div>
+
+    {/* Message Form */}
+    <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 opacity-90">
+      <h3 className="text-lg font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">Or send us a message below</h3>
+      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">First Name</label>
+            <input type="text" className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Last Name</label>
+            <input type="text" className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+          </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Last Name</label>
-          <input type="text" className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+          <label className="block text-sm font-medium text-slate-700 mb-1">Subject</label>
+          <select className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
+            <option>General Inquiry</option>
+            <option>Technical Support</option>
+            <option>Program Billing</option>
+          </select>
         </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Subject</label>
-        <select className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
-          <option>General Inquiry</option>
-          <option>Technical Support</option>
-          <option>Program Billing</option>
-        </select>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Message</label>
-        <textarea rows={4} className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"></textarea>
-      </div>
-      <button className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors font-medium">Send Message</button>
-    </form>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Message</label>
+          <textarea rows={4} className="w-full rounded-lg border-slate-300 border px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"></textarea>
+        </div>
+        <div className="pt-2">
+          <button className="bg-slate-800 text-white px-6 py-2.5 rounded-lg hover:bg-slate-900 transition-colors font-medium w-full md:w-auto shadow-md">
+            Send Message
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 );
 
@@ -99,154 +127,51 @@ const ProgramProgress = () => {
   );
 };
 
-// New Log Modal Component
-const NewLogModal = ({ isOpen, onClose, onSave }: { isOpen: boolean; onClose: () => void; onSave: (log: any) => void }) => {
-  if (!isOpen) return null;
+const ProgramLogsEmbed = () => {
+  useEffect(() => {
+    const scriptId = "jotform-async";
+    
+    // Ensure we start fresh if the component remounts
+    const existingScript = document.getElementById(scriptId);
+    if (existingScript) {
+      existingScript.remove();
+    }
 
-  const [formData, setFormData] = useState({
-    date: new Date().toISOString().split('T')[0],
-    personName: '',
-    description: '',
-    duration: '',
-    signature: '',
-    isWingMentor: false
-  });
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.src = "https://cdn.jotfor.ms/s/umd/latest/for-sheets-embed.js";
+    script.async = true;
+    document.body.appendChild(script);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, isWingMentor: e.target.checked }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-    setFormData({
-       date: new Date().toISOString().split('T')[0],
-       personName: '',
-       description: '',
-       duration: '',
-       signature: '',
-       isWingMentor: false
-    });
-  };
+    return () => {
+      const s = document.getElementById(scriptId);
+      if (s) s.remove();
+    };
+  }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-           <h3 className="text-xl font-bold text-slate-800">New Program Log Entry</h3>
-           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors"><X size={24} /></button>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
-           <div className="grid grid-cols-2 gap-4">
-             <div>
-               <label className="block text-sm font-medium text-slate-700 mb-1">Date</label>
-               <input 
-                 type="date" 
-                 name="date"
-                 value={formData.date}
-                 onChange={handleChange}
-                 required
-                 className="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm" 
-               />
-             </div>
-             <div>
-               <label className="block text-sm font-medium text-slate-700 mb-1">Duration (Hrs)</label>
-               <input 
-                 type="number" 
-                 name="duration"
-                 step="0.1"
-                 value={formData.duration}
-                 onChange={handleChange}
-                 required
-                 placeholder="e.g. 1.5"
-                 className="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm" 
-               />
-             </div>
-           </div>
-
-           <div>
-             <label className="block text-sm font-medium text-slate-700 mb-1">Name of Person</label>
-             <input 
-               type="text" 
-               name="personName"
-               value={formData.personName}
-               onChange={handleChange}
-               required
-               placeholder="Instructor or Student Name"
-               className="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm" 
-             />
-           </div>
-
-           <div className="flex items-center space-x-2">
-             <input 
-                type="checkbox" 
-                id="isWingMentor"
-                name="isWingMentor"
-                checked={formData.isWingMentor}
-                onChange={handleCheckboxChange}
-                className="w-4 h-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500"
-             />
-             <label htmlFor="isWingMentor" className="text-sm text-slate-700 select-none">
-               This person is part of the WingMentor Program
-             </label>
-           </div>
-
-           <div>
-             <label className="block text-sm font-medium text-slate-700 mb-1">Description of Support</label>
-             <textarea 
-               name="description"
-               value={formData.description}
-               onChange={handleChange}
-               required
-               rows={3}
-               placeholder="Details of training or support provided..."
-               className="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm" 
-             ></textarea>
-           </div>
-
-           <div>
-             <label className="block text-sm font-medium text-slate-700 mb-1">Signature</label>
-             <input 
-               type="text" 
-               name="signature"
-               value={formData.signature}
-               onChange={handleChange}
-               required
-               placeholder="Type full name to sign"
-               className="w-full rounded-lg border-slate-300 border px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none text-sm font-serif italic text-slate-600 bg-slate-50" 
-             />
-             <p className="text-xs text-slate-400 mt-1">By typing your name you agree this log is accurate.</p>
-           </div>
-
-           <div className="pt-4 flex justify-end space-x-3">
-             <button type="button" onClick={onClose} className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">Cancel</button>
-             <button type="submit" className="px-6 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 text-sm font-medium shadow-sm transition-colors">Save Entry</button>
-           </div>
-        </form>
+    <div className="space-y-6 animate-fadeIn">
+      <h2 className="text-2xl font-bold text-slate-800">Program Logs</h2>
+      {/* Container clips the bottom part (footer/branding) of the iframe */}
+      <div className="relative bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-[500px]">
+        <div 
+          className="jotform-table-embed" 
+          style={{ width: '100%', height: '600px' }} 
+          data-id="260077773072055" 
+          data-iframesource="www.jotform.com" 
+          data-type="interactive"
+        ></div>
+        {/* Aggressive white overlay to hide the bottom branding/footer area */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white to-transparent pointer-events-none z-10"></div>
       </div>
     </div>
   );
 };
 
-const LogsTable = ({ logs, verified = false, onAddClick }: { logs: ProgramLogEntry[], verified: boolean, onAddClick?: () => void }) => (
+const LogsTable = ({ logs, verified = false }: { logs: ProgramLogEntry[], verified: boolean }) => (
   <div className="space-y-6 animate-fadeIn">
     <div className="flex justify-between items-center">
       <h2 className="text-2xl font-bold text-slate-800">{verified ? 'Verified Logs' : 'Program Logs'}</h2>
-      {!verified && (
-        <button 
-          onClick={onAddClick}
-          className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition-colors text-sm font-medium flex items-center space-x-2 shadow-sm"
-        >
-          <Plus size={16} />
-          <span>New Entry</span>
-        </button>
-      )}
     </div>
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden overflow-x-auto">
       <table className="w-full text-left text-sm min-w-[800px]">
@@ -294,7 +219,7 @@ const LogsTable = ({ logs, verified = false, onAddClick }: { logs: ProgramLogEnt
           {logs.filter(l => verified ? l.status === 'Verified' : true).length === 0 && (
             <tr>
               <td colSpan={7} className="px-6 py-8 text-center text-slate-400">
-                No logs found. {verified ? "" : "Create a new entry to get started."}
+                No logs found.
               </td>
             </tr>
           )}
@@ -332,7 +257,6 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState<View>(View.DASHBOARD);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   
   // Initial Mock Data matching new structure
   const [logs, setLogs] = useState<ProgramLogEntry[]>([
@@ -367,21 +291,6 @@ const App: React.FC = () => {
     }, 2500);
     return () => clearTimeout(timer);
   }, []);
-
-  const handleAddLog = (data: any) => {
-    const newLog: ProgramLogEntry = {
-      id: Date.now().toString(),
-      date: data.date,
-      personName: data.personName,
-      description: data.description,
-      duration: data.duration,
-      signature: data.signature,
-      isWingMentor: data.isWingMentor,
-      status: 'Pending'
-    };
-    setLogs([newLog, ...logs]);
-    setIsLogModalOpen(false);
-  };
 
   const getViewLabel = (view: View) => {
     switch (view) {
@@ -423,11 +332,6 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <NewLogModal 
-        isOpen={isLogModalOpen} 
-        onClose={() => setIsLogModalOpen(false)} 
-        onSave={handleAddLog} 
-      />
 
       {/* Top Bar */}
       <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-50 px-4 md:px-6 flex items-center justify-between shadow-sm">
@@ -495,7 +399,17 @@ const App: React.FC = () => {
             <NavItem view={View.HANDBOOK} icon={BookOpen} label="Operating Handbook" />
             <NavItem view={View.PILOT_APPS} icon={LayoutGrid} label="Pilot Apps" />
             <NavItem view={View.TOOLS} icon={Wrench} label="Pilot Tools" />
-            <NavItem view={View.BROWSER} icon={Globe} label="Web Browser" />
+            
+            <a 
+              href="https://wing-navigator.vercel.app/"
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+            >
+              <Globe size={20} />
+              <span className="font-medium text-sm">Web Browser</span>
+            </a>
+
             <div className="pt-4 pb-2">
               <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Logbook</p>
             </div>
@@ -553,11 +467,10 @@ const App: React.FC = () => {
              )}
              {activeView === View.PROGRESS && <ProgramProgress />}
              {activeView === View.HANDBOOK && <Handbook />}
-             {activeView === View.LOGS && <LogsTable logs={logs} verified={false} onAddClick={() => setIsLogModalOpen(true)} />}
+             {activeView === View.LOGS && <ProgramLogsEmbed />}
              {activeView === View.VERIFIED_LOGS && <LogsTable logs={logs} verified={true} />}
              {activeView === View.TOOLS && <PilotTools />}
              {activeView === View.CONTACT && <ContactForm />}
-             {activeView === View.BROWSER && <WebBrowser />}
              {activeView === View.PILOT_APPS && <PilotApps />}
              {activeView === View.MENTOR_TOOLS && <MentorTools />}
              {activeView === View.WELCOME_GUIDE && <WelcomeGuide onNavigate={setActiveView} />}
