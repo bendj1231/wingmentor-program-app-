@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, ArrowRight, Database, Users, ClipboardList, Plane, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
+import { Bell, ArrowRight, Database, Users, ClipboardList, Plane, ChevronLeft, ChevronRight, ShoppingBag, Wrench, Clock, Activity, PieChart, Map, Share2, LineChart } from 'lucide-react';
 import { View } from '../types';
 
 interface DashboardProps {
   onNavigate: (view: View) => void;
   userName: string;
   userRole: string;
+  jotFormConnected: boolean;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ onNavigate, userName, userRole }) => {
+const Dashboard: React.FC<DashboardProps> = ({ onNavigate, userName, userRole, jotFormConnected }) => {
+  // Main Apps Carousel State
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Productivity Tools Carousel State
+  const [currentToolSlide, setCurrentToolSlide] = useState(0);
+  const [toolTouchStart, setToolTouchStart] = useState<number | null>(null);
+  const [toolTouchEnd, setToolTouchEnd] = useState<number | null>(null);
 
   const apps = [
     {
@@ -56,6 +63,40 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, userName, userRole })
     }
   ];
 
+  const tools = [
+    {
+      id: 'planning',
+      title: "Planning Room",
+      subtitle: "Mission Control",
+      description: "Advanced flight planning suite. Access weather overlays, calculate performance data, and optimize your routes with professional precision.",
+      image: "https://images.unsplash.com/photo-1584036561566-b93a901e3bae?auto=format&fit=crop&q=80&w=2000",
+      color: "text-sky-400",
+      btnColor: "bg-sky-500 hover:bg-sky-600 shadow-sky-500/25",
+      icon: Map
+    },
+    {
+      id: 'mindwebber',
+      title: "MindWebber",
+      subtitle: "Cognitive Training",
+      description: "Visualize complex aviation systems. Connect concepts, build mental models, and enhance your decision-making framework using our dynamic mapping tool.",
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2000",
+      color: "text-purple-400",
+      btnColor: "bg-purple-500 hover:bg-purple-600 shadow-purple-500/25",
+      icon: Share2
+    },
+    {
+      id: 'timeout',
+      title: "Time Out",
+      subtitle: "Fatigue Management",
+      description: "Monitor duty times and rest requirements. Ensure you are physically and mentally fit for flight with our integrated FRMS tools.",
+      image: "https://images.unsplash.com/photo-1495576775051-8af0bd6452f4?auto=format&fit=crop&q=80&w=2000",
+      color: "text-amber-400",
+      btnColor: "bg-amber-500 hover:bg-amber-600 shadow-amber-500/25",
+      icon: Clock
+    }
+  ];
+
+  // Auto-rotate Main Apps
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % apps.length);
@@ -63,49 +104,63 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, userName, userRole })
     return () => clearInterval(timer);
   }, [apps.length]);
 
+  // Auto-rotate Tools
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentToolSlide((prev) => (prev + 1) % tools.length);
+    }, 6500); // Slightly different timing
+    return () => clearInterval(timer);
+  }, [tools.length]);
+
+  // Main Apps Handlers
   const nextSlide = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     setCurrentSlide((prev) => (prev + 1) % apps.length);
   };
-
   const prevSlide = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     setCurrentSlide((prev) => (prev - 1 + apps.length) % apps.length);
   };
-
-  // Touch handlers for Swipe support
   const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null); // Reset touch end
+    setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
-
   const onTouchMove = (e: React.TouchEvent) => {
     setTouchEnd(e.targetTouches[0].clientX);
   };
-
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe) {
-      // Swiped left, show next slide
-      setCurrentSlide((prev) => (prev + 1) % apps.length);
-    }
-
-    if (isRightSwipe) {
-      // Swiped right, show previous slide
-      setCurrentSlide((prev) => (prev - 1 + apps.length) % apps.length);
-    }
+    if (distance > 50) setCurrentSlide((prev) => (prev + 1) % apps.length);
+    if (distance < -50) setCurrentSlide((prev) => (prev - 1 + apps.length) % apps.length);
   };
 
-  const getCardStyle = (index: number) => {
-    const total = apps.length;
-    let offset = (index - currentSlide + total) % total;
-    if (offset > total / 2) offset -= total;
+  // Tools Handlers
+  const nextToolSlide = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setCurrentToolSlide((prev) => (prev + 1) % tools.length);
+  };
+  const prevToolSlide = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setCurrentToolSlide((prev) => (prev - 1 + tools.length) % tools.length);
+  };
+  const onToolTouchStart = (e: React.TouchEvent) => {
+    setToolTouchEnd(null);
+    setToolTouchStart(e.targetTouches[0].clientX);
+  };
+  const onToolTouchMove = (e: React.TouchEvent) => {
+    setToolTouchEnd(e.targetTouches[0].clientX);
+  };
+  const onToolTouchEnd = () => {
+    if (!toolTouchStart || !toolTouchEnd) return;
+    const distance = toolTouchStart - toolTouchEnd;
+    if (distance > 50) setCurrentToolSlide((prev) => (prev + 1) % tools.length);
+    if (distance < -50) setCurrentToolSlide((prev) => (prev - 1 + tools.length) % tools.length);
+  };
 
+  const getCardStyle = (index: number, current: number, total: number) => {
+    let offset = (index - current + total) % total;
+    if (offset > total / 2) offset -= total;
     const isActive = offset === 0;
     
     return {
@@ -151,12 +206,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, userName, userRole })
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">WingMentor Program Insight</h1>
-          <p className="text-slate-500">Welcome back, {userRole} {userName}.</p>
+          <h1 className="text-3xl font-bold text-slate-800">WingMentor Program</h1>
+          <p className="text-slate-600 text-lg mt-1 font-medium">Introducing apps for pilots made by pilots</p>
+          <p className="text-slate-400 text-sm mt-2">Welcome back, {userRole} {userName}.</p>
         </div>
-        <div className="text-sm text-slate-400 hidden md:block">
+        <div className="text-sm text-slate-400 hidden md:block pt-2">
            {new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </div>
       </div>
@@ -176,7 +232,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, userName, userRole })
            return (
              <div 
                key={app.id}
-               style={getCardStyle(index)}
+               style={getCardStyle(index, currentSlide, apps.length)}
                onClick={() => !isActive && setCurrentSlide(index)}
                className="rounded-2xl overflow-hidden shadow-2xl bg-slate-900 border border-slate-700/50"
              >
@@ -277,6 +333,174 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate, userName, userRole })
               </button>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Analytics Section - Conditional */}
+      {jotFormConnected ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fadeIn">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow">
+             <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-slate-700">Flight Time</h3>
+                <div className="p-2 bg-sky-50 text-sky-600 rounded-lg">
+                  <Clock size={20} />
+                </div>
+             </div>
+             <div>
+               <div className="flex items-end gap-2 mb-2">
+                  <span className="text-3xl font-bold text-slate-800">42.5</span>
+                  <span className="text-slate-500 mb-1 text-sm">/ 60.0 hrs</span>
+               </div>
+               <div className="w-full bg-slate-100 rounded-full h-2 mb-2">
+                  <div className="bg-sky-500 h-2 rounded-full" style={{ width: '70%' }}></div>
+               </div>
+               <p className="text-xs text-slate-400">PPL Phase Progress</p>
+             </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow">
+             <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-slate-700">Mission Status</h3>
+                 <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                  <Activity size={20} />
+                </div>
+             </div>
+              <div>
+               <h4 className="text-lg font-bold text-slate-800 mb-1">Cross Country Phase</h4>
+               <p className="text-sm text-slate-500 mb-3">Next: Dual Navigation (XC-02)</p>
+               <button onClick={() => onNavigate(View.PROGRESS)} className="text-xs font-bold text-emerald-600 uppercase tracking-wide hover:text-emerald-700 flex items-center gap-1">
+                 View Syllabus <ArrowRight size={12} />
+               </button>
+             </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow">
+             <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-slate-700">Performance</h3>
+                <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
+                  <PieChart size={20} />
+                </div>
+             </div>
+              <div>
+               <div className="flex items-center gap-3 mb-2">
+                  <div className="text-3xl font-bold text-slate-800">94%</div>
+                  <div className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">+2.5%</div>
+               </div>
+               <p className="text-xs text-slate-400">Average Grade (Last 5 Flights)</p>
+             </div>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 text-center animate-fadeIn flex flex-col items-center justify-center py-12">
+           <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4">
+             <LineChart size={32} />
+           </div>
+           <h3 className="text-xl font-bold text-slate-800 mb-2">Analytics & Flight Data</h3>
+           <p className="text-slate-500 mb-6 max-w-md">
+             Connect your JotForm account to access real-time flight hours, mission progress tracking, and performance grading.
+           </p>
+           <button 
+             onClick={() => onNavigate(View.PROGRESS)}
+             className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-lg font-bold transition-colors shadow-lg flex items-center gap-2"
+           >
+             <span>Sign In to View Analytics</span>
+             <ArrowRight size={18} />
+           </button>
+        </div>
+      )}
+
+      {/* Productivity Tools Carousel */}
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+          <Wrench size={24} className="text-emerald-600" />
+          Productivity Tools Made by Pilots
+        </h2>
+        <div 
+          className="relative h-[450px] w-full touch-pan-y" 
+          style={{ perspective: '1200px' }}
+          onTouchStart={onToolTouchStart}
+          onTouchMove={onToolTouchMove}
+          onTouchEnd={onToolTouchEnd}
+        >
+          {tools.map((tool, index) => {
+            const Icon = tool.icon;
+            const isActive = index === currentToolSlide;
+            
+            return (
+              <div 
+                key={tool.id}
+                style={getCardStyle(index, currentToolSlide, tools.length)}
+                onClick={() => !isActive && setCurrentToolSlide(index)}
+                className="rounded-2xl overflow-hidden shadow-2xl bg-slate-900 border border-slate-700/50"
+              >
+                  {/* Background Image */}
+                  <div className="absolute inset-0 z-0">
+                    <img 
+                      src={tool.image} 
+                      alt={tool.title} 
+                      className="w-full h-full object-cover opacity-50 transition-transform duration-700 hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+                    {/* Additional futuristic overlay */}
+                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+                  </div>
+
+                  {/* Content */}
+                  <div 
+                    className={`relative z-10 p-8 md:p-12 h-full flex flex-col justify-center max-w-3xl transition-opacity duration-500 ${isActive ? 'opacity-100 delay-200' : 'opacity-0'}`}
+                  >
+                    <div className={`flex items-center space-x-2 mb-4 font-mono ${tool.color}`}>
+                      <Icon size={20} />
+                      <span className="text-sm tracking-widest uppercase font-bold">{tool.subtitle}</span>
+                    </div>
+                    
+                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 drop-shadow-md">{tool.title}</h2>
+                    
+                    <p className="text-slate-300 text-lg mb-8 leading-relaxed max-w-xl">
+                      {tool.description}
+                    </p>
+                    
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onNavigate(View.TOOLS);
+                      }}
+                      className={`self-start flex items-center space-x-3 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg transform hover:-translate-y-1 ${tool.btnColor}`}
+                    >
+                      <span>Launch Tool</span>
+                      <ArrowRight size={20} />
+                    </button>
+                  </div>
+              </div>
+            );
+          })}
+
+          {/* Tools Navigation Controls (Floating) */}
+          <div className="absolute right-12 bottom-12 flex space-x-3 z-30 pointer-events-auto">
+              <button 
+                onClick={prevToolSlide}
+                className="p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/10 transition-colors shadow-lg"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button 
+                onClick={nextToolSlide}
+                className="p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/10 transition-colors shadow-lg"
+              >
+                <ChevronRight size={24} />
+              </button>
+          </div>
+
+          {/* Tools Indicators */}
+          <div className="absolute left-12 bottom-12 flex space-x-2 z-30">
+              {tools.map((_, index) => (
+                <div 
+                  key={index}
+                  onClick={() => setCurrentToolSlide(index)}
+                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${index === currentToolSlide ? 'w-8 bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'w-2 bg-white/30 hover:bg-white/50'}`}
+                ></div>
+              ))}
+          </div>
         </div>
       </div>
 

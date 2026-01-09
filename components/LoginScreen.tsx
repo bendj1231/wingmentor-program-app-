@@ -23,19 +23,19 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, logoUrl }) => {
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
       <div className="max-w-5xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
         {/* Left Side: Branding */}
-        <div className="md:w-5/12 bg-slate-900 p-12 text-white flex flex-col justify-between relative overflow-hidden">
+        <div className="md:w-5/12 bg-slate-900 p-12 text-white flex flex-col justify-center items-center relative overflow-hidden text-center">
           <div className="absolute inset-0 z-0">
              <div className="absolute -right-10 -top-10 w-80 h-80 bg-sky-500/20 rounded-full blur-3xl"></div>
              <div className="absolute -left-10 -bottom-10 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl"></div>
           </div>
-          <div className="relative z-10">
-            <img src={logoUrl} alt="WingMentor" className="h-14 w-auto mb-8 bg-white/10 p-2 rounded-lg backdrop-blur-sm" />
-            <h2 className="text-3xl font-bold mb-4">Pilot Portal Access</h2>
+          <div className="relative z-10 flex flex-col items-center">
+            <img src={logoUrl} alt="WingMentor" className="h-40 w-auto mb-8 object-contain" />
+            <h2 className="text-3xl font-bold mb-4">WingMentor Program Portal</h2>
             <p className="text-slate-300 leading-relaxed text-lg">
-              Sign in to access your flight logs, operating handbooks, and mission control dashboard.
+              Sign in to gain access to the Pilot apps & tools, program logbooks & progress tracking, WingMentor's Communications Network & groupchats.
             </p>
           </div>
-          <div className="relative z-10 mt-12">
+          <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center z-10">
             <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-2">System Status</p>
             <div className="flex items-center space-x-2 text-emerald-400">
               <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>

@@ -413,12 +413,7 @@ const App: React.FC = () => {
       
     setCurrentUser({ name: username, role });
     setIsAuthenticated(true);
-    setLoading(true);
-    
-    // Simulate loading delay after login
-    setTimeout(() => {
-      setLoading(false);
-    }, 2500);
+    setLoading(true); // Triggers LoadingScreen
   };
 
   const getViewLabel = (view: View) => {
@@ -462,11 +457,32 @@ const App: React.FC = () => {
   }
 
   if (loading) {
-    return <LoadingScreen logoUrl={LOGO_URL} />;
+    return <LoadingScreen 
+      logoUrl={LOGO_URL} 
+      userName={currentUser.name}
+      onComplete={() => setLoading(false)} 
+    />;
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col animate-materialize">
+      <style>{`
+        @keyframes materialize {
+          0% {
+            opacity: 0;
+            transform: scale(1.05);
+            filter: blur(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0);
+          }
+        }
+        .animate-materialize {
+          animation: materialize 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+      `}</style>
 
       {/* Top Bar */}
       <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-50 px-4 md:px-6 flex items-center justify-between shadow-sm">
@@ -609,6 +625,7 @@ const App: React.FC = () => {
                  onNavigate={(view) => setActiveView(view)} 
                  userName={currentUser.name}
                  userRole={currentUser.role}
+                 jotFormConnected={jotFormConnected}
                />
              )}
              {activeView === View.PROGRESS && (
