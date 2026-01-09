@@ -10,6 +10,7 @@ export enum View {
   PILOT_APPS = 'PILOT_APPS',
   MENTOR_TOOLS = 'MENTOR_TOOLS',
   WELCOME_GUIDE = 'WELCOME_GUIDE',
+  SETTINGS = 'SETTINGS',
 }
 
 export interface ProgramLogEntry {

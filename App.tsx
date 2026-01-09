@@ -15,7 +15,8 @@ import {
   LayoutGrid,
   Briefcase,
   HelpCircle,
-  ExternalLink
+  ExternalLink,
+  Settings
 } from 'lucide-react';
 import LoadingScreen from './components/LoadingScreen';
 import LoginScreen from './components/LoginScreen';
@@ -73,6 +74,95 @@ const ContactForm = () => (
         <ExternalLink size={24} />
         Join Telegram Channel
       </a>
+    </div>
+  </div>
+);
+
+interface AccountSettingsProps {
+  userName: string;
+  userRole: string;
+}
+
+const AccountSettings: React.FC<AccountSettingsProps> = ({ userName, userRole }) => (
+  <div className="space-y-6 animate-fadeIn max-w-3xl mx-auto">
+    <h2 className="text-2xl font-bold text-slate-800">Account Settings</h2>
+    
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="p-6 border-b border-slate-100 flex items-center gap-4">
+        <div className="w-20 h-20 bg-slate-200 rounded-full flex items-center justify-center text-slate-500">
+          <User size={40} />
+        </div>
+        <div>
+           <div className="flex items-center gap-2">
+             <h3 className="text-xl font-bold text-slate-800">{userName}</h3>
+             <span className={`px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wide ${userRole === 'Mentor' ? 'bg-purple-100 text-purple-700' : 'bg-sky-100 text-sky-700'}`}>
+               {userRole}
+             </span>
+           </div>
+           <button className="text-sky-600 text-sm font-semibold hover:underline mt-1">Change Avatar</button>
+           <p className="text-xs text-slate-500 mt-1">Allowed files: JPG, PNG. Max size: 2MB</p>
+        </div>
+      </div>
+      
+      <div className="p-6 space-y-6">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+               <label className="text-sm font-bold text-slate-700">Username / ID</label>
+               <div className="w-full px-4 py-2 border border-slate-200 bg-slate-50 rounded-lg text-slate-600">
+                 {userName}
+               </div>
+            </div>
+             <div className="space-y-2">
+               <label className="text-sm font-bold text-slate-700">Account Role</label>
+               <div className="w-full px-4 py-2 border border-slate-200 bg-slate-50 rounded-lg text-slate-600 flex justify-between items-center">
+                 <span>{userRole} Configuration</span>
+                 {userRole === 'Mentor' ? <Briefcase size={16} /> : <User size={16} />}
+               </div>
+            </div>
+         </div>
+         
+         <div className="pt-6 border-t border-slate-100">
+            <h3 className="text-lg font-bold text-slate-800 mb-4">Support & Community</h3>
+            <div className="bg-sky-50 border border-sky-100 rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-sky-100 text-sky-600 rounded-lg">
+                  <ExternalLink size={20} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-800">Telegram Support Group</h4>
+                  <p className="text-sm text-slate-600">Join the live chat for immediate technical assistance.</p>
+                </div>
+              </div>
+              <a 
+                href="https://t.me/+qzRaI1K_-Sc1MDM1" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-bold hover:bg-sky-700 transition-colors"
+              >
+                Join Chat
+              </a>
+            </div>
+         </div>
+
+         <div className="pt-6 border-t border-slate-100">
+            <h3 className="text-lg font-bold text-slate-800 mb-4">Notifications</h3>
+            <div className="space-y-3">
+               <label className="flex items-center space-x-3 cursor-pointer">
+                  <input type="checkbox" className="form-checkbox h-5 w-5 text-sky-600 rounded" defaultChecked />
+                  <span className="text-slate-700">Email me about program updates</span>
+               </label>
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input type="checkbox" className="form-checkbox h-5 w-5 text-sky-600 rounded" defaultChecked />
+                  <span className="text-slate-700">Notify me when logs are verified</span>
+               </label>
+            </div>
+         </div>
+
+         <div className="flex justify-end gap-3 pt-4">
+            <button className="px-6 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50">Cancel</button>
+            <button className="px-6 py-2 bg-sky-600 text-white rounded-lg font-bold hover:bg-sky-700 shadow-sm">Save Changes</button>
+         </div>
+      </div>
     </div>
   </div>
 );
@@ -312,8 +402,8 @@ const App: React.FC = () => {
 
   const LOGO_URL = "https://lh3.googleusercontent.com/d/1KgVuIuCv8mKxTcJ4rClCUCdaQ3fxm0x6";
 
-  const handleLogin = (username: string, jfConnected: boolean) => {
-    setJotFormConnected(jfConnected);
+  const handleLogin = (username: string) => {
+    setJotFormConnected(false); // Default to false so the user is prompted in the Progress tab
     
     // Determine role based on username configuration (simple heuristic for demo)
     const lowerUser = username.toLowerCase();
@@ -344,6 +434,7 @@ const App: React.FC = () => {
       case View.PILOT_APPS: return 'Pilot Apps';
       case View.MENTOR_TOOLS: return 'Mentor Productivity';
       case View.WELCOME_GUIDE: return 'User Guide';
+      case View.SETTINGS: return 'Account Settings';
       default: return 'WingMentor';
     }
   };
@@ -421,7 +512,10 @@ const App: React.FC = () => {
                <p>{currentUser.role}</p>
                <p className="font-bold text-slate-800">{currentUser.name}</p>
              </div>
-             <div className="w-9 h-9 bg-sky-100 rounded-full flex items-center justify-center text-sky-700 border border-sky-200">
+             <div 
+               className="w-9 h-9 bg-sky-100 rounded-full flex items-center justify-center text-sky-700 border border-sky-200 cursor-pointer hover:bg-sky-200 transition-colors"
+               onClick={() => setActiveView(View.SETTINGS)}
+             >
                <User size={18} />
              </div>
           </div>
@@ -437,10 +531,26 @@ const App: React.FC = () => {
           <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
             <NavItem view={View.DASHBOARD} icon={LayoutDashboard} label="Dashboard" />
             <NavItem view={View.PROGRESS} icon={LineChart} label="Current Progress" />
+            
+            <a 
+              href="https://wingmentorapp.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+            >
+              <ExternalLink size={20} />
+              <span className="font-medium text-sm">Official Website</span>
+            </a>
+
+            <div className="pt-4 pb-2">
+              <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Logbook</p>
+            </div>
+            <NavItem view={View.LOGS} icon={FileText} label="Program Logs" />
+            <NavItem view={View.VERIFIED_LOGS} icon={CheckCircle} label="Verified Logs" />
+
             <div className="pt-4 pb-2">
               <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Resources</p>
             </div>
-            <NavItem view={View.HANDBOOK} icon={BookOpen} label="Operating Handbook" />
             <NavItem view={View.PILOT_APPS} icon={LayoutGrid} label="Pilot Apps" />
             <NavItem view={View.TOOLS} icon={Wrench} label="Pilot Tools" />
             
@@ -451,14 +561,8 @@ const App: React.FC = () => {
               className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
             >
               <Globe size={20} />
-              <span className="font-medium text-sm">Web Browser</span>
+              <span className="font-medium text-sm">Pilot Search-Engine Web Browser</span>
             </a>
-
-            <div className="pt-4 pb-2">
-              <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Logbook</p>
-            </div>
-            <NavItem view={View.LOGS} icon={FileText} label="Program Logs" />
-            <NavItem view={View.VERIFIED_LOGS} icon={CheckCircle} label="Verified Logs" />
             
             <div className="pt-4 pb-2">
               <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Mentorship</p>
@@ -468,20 +572,14 @@ const App: React.FC = () => {
             <div className="pt-4 pb-2">
               <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Support</p>
             </div>
+            <NavItem view={View.HANDBOOK} icon={BookOpen} label="Operating Handbook" />
             <NavItem view={View.WELCOME_GUIDE} icon={HelpCircle} label="User Guide" />
             <NavItem view={View.CONTACT} icon={Mail} label="Contact Team" />
-            
-            <div className="pt-2">
-              <a 
-                href="https://wingmentorapp.vercel.app/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
-              >
-                <ExternalLink size={20} />
-                <span className="font-medium text-sm">Official Website</span>
-              </a>
+
+             <div className="pt-4 pb-2">
+              <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Account</p>
             </div>
+            <NavItem view={View.SETTINGS} icon={Settings} label="Account Settings" />
           </div>
           
           <div className="p-4 border-t border-slate-200">
@@ -509,6 +607,8 @@ const App: React.FC = () => {
              {activeView === View.DASHBOARD && (
                <Dashboard 
                  onNavigate={(view) => setActiveView(view)} 
+                 userName={currentUser.name}
+                 userRole={currentUser.role}
                />
              )}
              {activeView === View.PROGRESS && (
@@ -525,6 +625,7 @@ const App: React.FC = () => {
              {activeView === View.PILOT_APPS && <PilotApps />}
              {activeView === View.MENTOR_TOOLS && <MentorTools />}
              {activeView === View.WELCOME_GUIDE && <WelcomeGuide onNavigate={setActiveView} />}
+             {activeView === View.SETTINGS && <AccountSettings userName={currentUser.name} userRole={currentUser.role} />}
           </div>
           
           {/* Footer */}

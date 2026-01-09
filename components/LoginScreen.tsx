@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import { User, Lock, ArrowRight, BarChart3 } from 'lucide-react';
+import { User, Lock, ArrowRight } from 'lucide-react';
 
 interface LoginScreenProps {
-  onLogin: (username: string, jotFormConnected: boolean) => void;
+  onLogin: (username: string) => void;
   logoUrl: string;
 }
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, logoUrl }) => {
   const [wmUser, setWmUser] = useState('');
   const [wmPass, setWmPass] = useState('');
-  const [jfUser, setJfUser] = useState('');
-  const [jfPass, setJfPass] = useState('');
   
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, we would validate credentials here.
     // We pass the username back to the App component to display in the header.
     if (wmUser) {
-      onLogin(wmUser, !!jfUser && !!jfPass);
+      onLogin(wmUser);
     }
   };
 
@@ -81,35 +79,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, logoUrl }) => {
                         required
                       />
                     </div>
-                  </div>
-                </div>
-
-                {/* JotForm Login Integration */}
-                 <div className="space-y-4 bg-orange-50/50 p-6 rounded-xl border border-orange-100">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="p-1.5 bg-orange-100 text-orange-600 rounded">
-                        <BarChart3 size={16} />
-                    </div>
-                    <h3 className="text-xs font-bold text-orange-800 uppercase tracking-wider">
-                        Analytics Integration (Optional)
-                    </h3>
-                  </div>
-                  <p className="text-xs text-slate-500 mb-3">Sign in to your JotForm account to automatically load embedded analytics and progress reports.</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <input 
-                        type="text" 
-                        placeholder="JotForm Username"
-                        value={jfUser}
-                        onChange={(e) => setJfUser(e.target.value)}
-                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all text-sm"
-                      />
-                       <input 
-                        type="password" 
-                        placeholder="JotForm Password"
-                        value={jfPass}
-                        onChange={(e) => setJfPass(e.target.value)}
-                        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all text-sm"
-                      />
                   </div>
                 </div>
             </div>

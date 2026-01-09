@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, ArrowRight, Database, Users, ClipboardList, Plane, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Bell, ArrowRight, Database, Users, ClipboardList, Plane, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { View } from '../types';
 
 interface DashboardProps {
   onNavigate: (view: View) => void;
+  userName: string;
+  userRole: string;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+const Dashboard: React.FC<DashboardProps> = ({ onNavigate, userName, userRole }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -151,8 +153,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">Mission Control</h1>
-          <p className="text-slate-500">Welcome back, Captain Richardson.</p>
+          <h1 className="text-3xl font-bold text-slate-800">WingMentor Program Insight</h1>
+          <p className="text-slate-500">Welcome back, {userRole} {userName}.</p>
         </div>
         <div className="text-sm text-slate-400 hidden md:block">
            {new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
@@ -276,6 +278,46 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Shop Section */}
+      <div className="pt-8 border-t border-slate-200">
+        <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2 mb-6">
+          <ShoppingBag size={24} className="text-purple-600" />
+          Pilot Shop
+        </h2>
+
+        <a 
+          href="https://wingmentorapp.vercel.app/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="block relative overflow-hidden rounded-2xl shadow-md group h-64 md:h-80"
+        >
+          {/* Background Image */}
+          <div className="absolute inset-0">
+             <img 
+               src="https://images.unsplash.com/photo-1583095117917-0b1e77926b0e?auto=format&fit=crop&q=80&w=1200" 
+               alt="Pilot Shop" 
+               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+             />
+             <div className="absolute inset-0 bg-gradient-to-r from-purple-900/90 via-purple-900/70 to-transparent"></div>
+          </div>
+          
+          <div className="relative h-full p-8 md:p-12 flex flex-col justify-center items-start z-10 max-w-2xl">
+               <div className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-semibold border border-white/10 mb-4">
+                  Official Store
+               </div>
+               <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">Equip for Excellence</h3>
+               <p className="text-purple-100 text-lg leading-relaxed mb-8 max-w-lg">
+                 Browse our curated selection of training kits, premium headsets, uniforms, and study guides. 
+               </p>
+               
+               <span className="inline-flex items-center gap-2 bg-white text-purple-900 px-6 py-3 rounded-xl font-bold hover:bg-purple-50 transition-colors shadow-lg">
+                 Visit WingMentor Shop
+                 <ArrowRight size={18} />
+               </span>
+          </div>
+        </a>
       </div>
     </div>
   );
